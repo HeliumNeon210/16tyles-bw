@@ -33,20 +33,21 @@
       width: 100vw;
     }
 
+    /* タイル部分のスタイル */
     #leftPanel {
-      flex: 3;
+      flex: 4;               /* タイル部分を大きく */
       display: flex;
       justify-content: center; /* 横方向中央 */
       align-items: center;     /* 縦方向中央 */
       padding: 2vmin;
     }
 
+    /* 時計部分のスタイル */
     #rightPanel {
-      flex: 2;
+      flex: 2;               /* 時計部分を少し小さく */
       display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
+      justify-content: center; /* 横方向中央 */
+      align-items: center;     /* 縦方向中央 */
       padding: 2vmin;
     }
 
@@ -58,6 +59,7 @@
       width: 100%;
       aspect-ratio: 1 / 1;
       max-height: 100%;
+      justify-items: center; /* タイルを中央に配置 */
     }
 
     .tile {
@@ -118,15 +120,20 @@
 </head>
 <body class="dark">
   <div id="container">
+    <!-- 左側：タイル -->
     <div id="leftPanel">
       <div id="tileClock">
         <!-- 16 tiles will be inserted here -->
       </div>
     </div>
+
+    <!-- 右側：時計 -->
     <div id="rightPanel">
       <div id="fractionTime">--.--</div>
     </div>
   </div>
+
+  <!-- テーマ切り替えボタン -->
   <button id="themeToggle">ライトテーマに切り替え</button>
 
   <script>
