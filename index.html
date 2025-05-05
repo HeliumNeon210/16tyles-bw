@@ -13,9 +13,7 @@
       margin: 0;
       height: 100vh;
       display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
+      flex-direction: row;
       transition: background 0.3s, color 0.3s;
     }
 
@@ -29,12 +27,19 @@
       color: #222;
     }
 
+    #leftPanel {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex: 0 0 auto;
+      padding: 20px;
+    }
+
     #tileClock {
       display: grid;
       grid-template-columns: repeat(4, 80px);
       grid-template-rows: repeat(4, 80px);
       gap: 8px;
-      margin-bottom: 40px;
     }
 
     .tile {
@@ -60,16 +65,22 @@
       background-color: #fff;
     }
 
+    #rightPanel {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
+    }
+
     #fractionTime {
-      font-size: 48px;
-      margin-top: 0;
+      font-size: 80px;
+      margin-bottom: 40px;
     }
 
     #themeToggle {
-      position: absolute;
-      top: 20px;
-      right: 20px;
-      padding: 0.5em 1em;
+      padding: 0.7em 1.5em;
       font-size: 1em;
       cursor: pointer;
       border: none;
@@ -93,9 +104,14 @@
   </style>
 </head>
 <body class="dark">
-  <div id="tileClock"></div>
-  <div id="fractionTime">--.--</div>
-  <button id="themeToggle">ライトテーマに切り替え</button>
+  <div id="leftPanel">
+    <div id="tileClock"></div>
+  </div>
+
+  <div id="rightPanel">
+    <div id="fractionTime">--.--</div>
+    <button id="themeToggle">ライトテーマに切り替え</button>
+  </div>
 
   <script>
     const tileClock = document.getElementById("tileClock");
