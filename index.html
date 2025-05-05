@@ -2,7 +2,7 @@
 <html lang="ja">
 <head>
   <meta charset="UTF-8">
-  <title>16-bit Day Clock + Fractional Time</title>
+  <title>16-bit Clock + Fraction Clock</title>
   <style>
     * {
       box-sizing: border-box;
@@ -18,12 +18,12 @@
     }
 
     body.dark {
-      background: #222;
+      background-color: #222;
       color: #0f0;
     }
 
     body.light {
-      background: #fefefe;
+      background-color: #fefefe;
       color: #222;
     }
 
@@ -34,8 +34,17 @@
     }
 
     #leftPanel {
-      flex: 1;
+      flex: 3;
       display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 2vmin;
+    }
+
+    #rightPanel {
+      flex: 2;
+      display: flex;
+      flex-direction: column;
       justify-content: center;
       align-items: center;
       padding: 2vmin;
@@ -47,16 +56,15 @@
       grid-template-rows: repeat(4, 1fr);
       gap: 2vmin;
       width: 100%;
-      aspect-ratio: 1 / 1;  /* ✅ タイル全体を正方形に保つ */
+      aspect-ratio: 1 / 1; /* タイル全体を正方形に保つ */
       max-height: 100%;
     }
-
 
     .tile {
       width: 100%;
       height: 100%;
+      border: 1px solid #444;
       transition: background 0.3s;
-      border: none;
     }
 
     .tile.on {
@@ -75,27 +83,22 @@
       background-color: #fff;
     }
 
-    #rightPanel {
-      flex: 1;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-      padding: 2vmin;
-    }
-
     #fractionTime {
-      font-size: 10vw;
-      margin-bottom: 5vh;
+      font-size: 6vw;
+      margin-top: 2vh;
     }
 
     #themeToggle {
-      padding: 1em 2em;
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      padding: 0.5em 1em;
       font-size: 1em;
       cursor: pointer;
       border: none;
       border-radius: 5px;
       transition: background 0.2s, color 0.2s;
+      z-index: 10;
     }
 
     body.dark #themeToggle {
@@ -116,27 +119,27 @@
 <body class="dark">
   <div id="container">
     <div id="leftPanel">
-      <div id="tileClock"></div>
+      <div id="tileClock">
+        <!-- 16 tiles will be inserted here -->
+      </div>
     </div>
     <div id="rightPanel">
       <div id="fractionTime">--.--</div>
-      <button id="themeToggle">ライトテーマに切り替え</button>
     </div>
   </div>
+  <button id="themeToggle">ライトテーマに切り替え</button>
 
   <script>
-    const tileClock = document.getElementById("tileClock");
-    const fractionTime = document.getElementById("fractionTime");
-
     // タイル初期化
+    const tileClock = document.getElementById("tileClock");
     for (let i = 0; i < 16; i++) {
       const tile = document.createElement("div");
       tile.classList.add("tile", "off");
       tileClock.appendChild(tile);
     }
-
     const tiles = Array.from(tileClock.children);
 
+    // タイル更新
     function updateClock() {
       const now = new Date();
       const secondsSinceMidnight =
@@ -152,14 +155,31 @@
         tile.classList.toggle("on", binary[i] === "1");
         tile.classList.toggle("off", binary[i] === "0");
       });
-
-      const fraction = secondsSinceMidnight / 86.4;
-      fractionTime.textContent = fraction.toFixed(2);
     }
 
-    setInterval(updateClock, 100);
-    updateClock();
+    // 小数時計更新
+    function updateFractionTime() {
+      const now = new Date();
+      const secondsSinceMidnight =
+        now.getHours() * 3600 +
+        now.getMinutes() * 60 +
+        now.getSeconds() +
+        now.getMilliseconds() / 1000;
 
+      const fraction = secondsSinceMidnight / 86.4;
+      const display = fraction.toFixed(2);
+      document.getElementById("fractionTime").textContent = display;
+    }
+
+    setInterval(() => {
+      updateClock();
+      updateFractionTime();
+    }, 100);
+
+    updateClock();
+    updateFractionTime();
+
+    // テーマ切り替え
     const body = document.body;
     const toggleButton = document.getElementById("themeToggle");
 
