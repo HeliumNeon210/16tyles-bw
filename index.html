@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <title>16-bit Day Clock</title>
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: sans-serif;
+      margin: 0;
+      background: #222;
+      color: #fff;
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    #tileClock {
+      display: grid;
+      grid-template-columns: repeat(4, 80px);
+      grid-template-rows: repeat(4, 80px);
+      gap: 8px;
+    }
+
+    .tile {
+      width: 80px;
+      height: 80px;
+      border: 1px solid #444;
+      transition: background 0.3s;
+    }
+
+    .tile.on {
+      background-color: #fff;
+    }
+
+    .tile.off {
+      background-color: #222;
+    }
+  </style>
+</head>
+<body>
+  <div id="tileClock">
+    <!-- 16 tiles will be inserted here -->
+  </div>
+
+  <script>
+    const tileClock = document.getElementById("tileClock");
+
+    // 初期化：16個のタイル
+    for (let i = 0; i < 16; i++) {
+      const tile = document.createElement("div");
+      tile.classList.add("tile", "off");
+      tileClock.appendChild(tile);
+    }
+
+    const tiles = Array.from(tileClock.children);
+
+    function updateClock() {
+      const now = new Date();
+      const secondsSinceMidnight =
+        now.getHours() * 3600 +
+        now.getMinutes() * 60 +
+        now.getSeconds() +
+        now.getMilliseconds() / 1000;
+
+      const fractionIndex = Math.floor((secondsSinceMidnight / 86400) * 65536);
+      const binary = fractionIndex.toString(2).padStart(16, "0");
+
+      tiles.forEach((tile, i) => {
+        tile.classList.toggle("on", binary[i] === "1");
+        tile.classList.toggle("off", binary[i] === "0");
+      });
+    }
+
+    setInterval(updateClock, 100);
+    updateClock();
+  </script>
+</body>
+</html>
